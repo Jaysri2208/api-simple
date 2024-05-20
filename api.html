@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTTP API Calls Example</title>
+    <style>
+        button, input, textarea {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>HTTP API Calls Example</h1>
+
+    <button id="getButton">GET</button>
+
+    <button id="postButton">POST</button>
+
+    <h3>Update a Post (PUT)</h3>
+    <label for="putId">ID:</label>
+    <input type="number" id="putId" placeholder="Enter post ID">
+    <label for="putTitle">Title:</label>
+    <input type="text" id="putTitle" placeholder="Enter title">
+    <label for="putBody">Body:</label>
+    <input type="text" id="putBody" placeholder="Enter body">
+    <button id="putButton">PUT</button>
+
+    <h3>Delete a Post (DELETE)</h3>
+    <label for="deleteId">ID:</label>
+    <input type="number" id="deleteId" placeholder="Enter post ID">
+    <button id="deleteButton">DELETE</button>
+
+    <div id="response"></div>
+
+    <script>
+        document.getElementById('getButton').addEventListener('click', function() {
+            fetch('https://jsonplaceholder.typicode.com/posts/1')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('response').innerText = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+
+        document.getElementById('postButton').addEventListener('click', function() {
+            fetch('https://jsonplaceholder.typicode.com/posts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    title: 'foo',
+                    body: 'bar',
+                    userId: 1
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('response').innerText = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+
+        document.getElementById('putButton').addEventListener('click', function() {
+            const putId = document.getElementById('putId').value;
+            const putTitle = document.getElementById('putTitle').value;
+            const putBody = document.getElementById('putBody').value;
+
+            fetch(`https://jsonplaceholder.typicode.com/posts/${putId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    title: putTitle,
+                    body: putBody,
+                    userId: 1
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('response').innerText = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+
+        document.getElementById('deleteButton').addEventListener('click', function() {
+            const deleteId = document.getElementById('deleteId').value;
+            fetch(`https://jsonplaceholder.typicode.com/posts/${deleteId}`, {
+                method: 'DELETE'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('response').innerText = 'Deleted successfully';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+</body>
+</html>
